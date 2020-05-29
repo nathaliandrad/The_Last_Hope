@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Bullet
+  - Enemy
+  - StartShooting
+  - EnemyBullet
+  - HealthPack
+  - SmallAirplanes
+  - GunPower
+  - Asteroid
+  - ScoreUp
+  - SpecialCircle
+  - DifficultyBarrier2
+  - DifficultyBarrier3
+  - BossBarrier
+  - BossBullet
+  - SmallBossBullet
+  - FxTemporaire
+  - PowerBullet
+  - Diamond
+  - Win
+  - Loose
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - Player
+  - Bullet
+  - Enemy
+  - EnemyBullet
+  - PickUp
+  - Camera
+  - LevelBarrier
+  - Boss
+  - BossBullet
+  - Asteroid
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
