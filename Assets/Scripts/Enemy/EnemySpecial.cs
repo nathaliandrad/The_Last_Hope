@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,72 +6,73 @@ using UnityEngine.UI;
 public class EnemySpecial : MonoBehaviour
 {
     public Transform player;
-    public int distance;
-    public float movementSpeed;
+    public float movementSpeed = 20f;
     public AudioSource speaker;
     public AudioClip enemyHitSFX;
 
     public GameObject bossEfxHit;
     public GameObject explode;
-
     public GameObject diamond;
 
-    int bossHealth;
+    private int bossHealth = 250;
 
-
-
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
+        // Initialize boss properties
         bossHealth = 250;
-        movementSpeed = 20f;
-       // diamond.SetActive(false);
-
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-
-      
-
+        // Check if the boss's health is zero or less
         if (bossHealth <= 0)
         {
-            Instantiate(explode, transform.position, transform.rotation);
-            Instantiate(diamond, transform.position, transform.rotation);
-            Destroy(gameObject,0.5f);
-           
-          //  diamond.SetActive(true);
+            HandleBossDefeat();
         }
 
-        transform.Translate(new Vector3(0, 0, movementSpeed) * Time.deltaTime);
-
+        // Move the boss forward
+        MoveForward();
     }
 
-    public void OnTriggerEnter(Collider other)
+    private void MoveForward()
     {
-
-        Physics.IgnoreLayerCollision(15, 16);
-        Physics.IgnoreLayerCollision(11, 15);
-        if (other.gameObject.CompareTag("Bullet"))
-        {
-              Damage(5);
-            speaker.PlayOneShot(enemyHitSFX, 1);
-            Instantiate(bossEfxHit, other.transform.position, other.transform.rotation);
-            Destroy(other.gameObject);
-        }
-        if (other.gameObject.CompareTag("PowerBullet"))
-        {
-              Damage(10);
-            speaker.PlayOneShot(enemyHitSFX, 1);
-            Instantiate(bossEfxHit, other.transform.position, other.transform.rotation);
-            Destroy(other.gameObject);
-        }
-
+        transform.Translate(Vector3.forward * movementSpeed * Time.deltaTime);
     }
-    public void Damage(int dmg)
+
+    private void HandleBossDefeat()
     {
-        bossHealth -= dmg;
+        // Instantiate explosion and diamond
+        Instantiate(explode, transform.position, transform.rotation);
+        Instantiate(diamond, transform.position, transform.rotation);
+
+        // Destroy the boss
+        Destroy(gameObject, 0.5f);
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        // Ignore specific collisions
+        if (other.CompareTag("Bullet") || other.CompareTag("PowerBullet"))
+        {
+            HandleBulletCollision(other);
+        }
+    }
+
+    private void HandleBulletCollision(Collider bullet)
+    {
+        int damage = bullet.CompareTag("Bullet") ? 5 : 10; // Determine bullet damage
+        Damage(damage);
+
+        // Play hit sound and instantiate hit visual effects
+        speaker.PlayOneShot(enemyHitSFX, 1);
+        Instantiate(bossEfxHit, bullet.transform.position, bullet.transform.rotation);
+
+        // Destroy the bullet
+        Destroy(bullet.gameObject);
+    }
+
+    private void Damage(int damageAmount)
+    {
+        bossHealth -= damageAmount;
+    }
 }
