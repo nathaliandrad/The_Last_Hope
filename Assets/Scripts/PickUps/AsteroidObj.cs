@@ -1,64 +1,51 @@
-﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AsteroidObj : MonoBehaviour
 {
-
-    // public string typePowerUp;
-    public float speed;
-    float movement;
-    float rotation;
-
+    public float speed = 0.8f;
+    public float rotationSpeed = 3f;
     public AudioSource speaker;
     public AudioClip hitSeffect;
-
     public GameObject effectExp;
 
-    public void Start()
+    private void FixedUpdate()
     {
-        movement = -0.8f;
-        rotation = 3f;
+        RotateAsteroid();
+        MoveAsteroid();
     }
 
-    public void FixedUpdate()
+    private void RotateAsteroid()
     {
-
-
-        transform.Rotate(new Vector3(-rotation, 0, 0));
-
-        transform.Translate(new Vector3(0, 0, movement), Space.World );
-        // transform.Translate(new Vector3(0, 0, 0), Space.World);
+        transform.Rotate(Vector3.left * rotationSpeed);
     }
 
-    public void OnTriggerEnter(Collider other)
+    private void MoveAsteroid()
     {
+        Vector3 movement = Vector3.back * speed;
+        transform.Translate(movement, Space.World);
+    }
 
-        Physics.IgnoreLayerCollision(17, 16);
-        Physics.IgnoreLayerCollision(17, 11);
-
-        if (other.gameObject.CompareTag("Bullet"))
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Bullet") || other.CompareTag("PowerBullet"))
         {
-            speaker.PlayOneShot(hitSeffect, 1);
-
-            Destroy(other.gameObject);
-            Instantiate(effectExp, transform.position, transform.rotation);
-            GM.score += 30;
-            Destroy(gameObject);
-        }
-
-        if (other.gameObject.CompareTag("PowerBullet"))
-        {
-            speaker.PlayOneShot(hitSeffect, 1);
-
-            Destroy(other.gameObject);
-            Instantiate(effectExp, transform.position, transform.rotation);
-            GM.score += 30;
-            Destroy(gameObject);
+            HandleAsteroidCollision();
         }
     }
 
+    private void HandleAsteroidCollision()
+    {
+        if (speaker != null && hitSeffect != null)
+        {
+            speaker.PlayOneShot(hitSeffect, 1);
+        }
 
+        if (effectExp != null)
+        {
+            Instantiate(effectExp, transform.position, transform.rotation);
+        }
 
-
+        GM.score += 30;
+        Destroy(gameObject);
+    }
 }
