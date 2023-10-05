@@ -1,68 +1,61 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class Shoot : MonoBehaviour
 {
     public GameObject bullet;
-
     public GameObject bulletTestTest;
     public GameObject extraBullet;
     public GameObject smallNozzleL, smallNozzleR;
     public GameObject smallNozzleL2, smallNozzleR2;
-
-    
-
     public GameObject bulletPack, nozzle;
-
-
     public GameObject smallAirplane;
-
-
 
     public AudioClip shootSound;
     public AudioClip shootSpecialSound;
-    public AudioSource speaker;
+    private AudioSource speaker;
 
     private void Start()
     {
         speaker = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-   
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (GM.powerBullet)
             {
-                Instantiate(bulletTestTest, nozzle.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                speaker.PlayOneShot(shootSpecialSound, 1);
+                ShootBullet(bulletTestTest, shootSpecialSound);
             }
             else
-            Instantiate(bulletPack,nozzle.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-            speaker.PlayOneShot(shootSound, 1);
-
-
-
-            if (smallAirplane.active)
             {
-                Instantiate(extraBullet, smallNozzleL.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                Instantiate(extraBullet, smallNozzleR.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-
-                Instantiate(extraBullet, smallNozzleL2.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                Instantiate(extraBullet, smallNozzleR2.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
+                ShootBullet(bulletPack, shootSound);
             }
 
+            if (smallAirplane.activeSelf)
+            {
+                ShootExtraBullets(extraBullet, smallNozzleL);
+                ShootExtraBullets(extraBullet, smallNozzleR);
+                ShootExtraBullets(extraBullet, smallNozzleL2);
+                ShootExtraBullets(extraBullet, smallNozzleR2);
+            }
         }
-
-
-
-        
-
-
-
     }
 
+    private void ShootBullet(GameObject bulletType, AudioClip sound)
+    {
+        Instantiate(bulletType, nozzle.transform.position, Quaternion.identity);
+        PlayShootSound(sound);
+    }
+
+    private void ShootExtraBullets(GameObject bulletType, GameObject nozzleLocation)
+    {
+        Instantiate(bulletType, nozzleLocation.transform.position, Quaternion.identity);
+    }
+
+    private void PlayShootSound(AudioClip sound)
+    {
+        speaker.PlayOneShot(sound, 1);
+    }
 }
