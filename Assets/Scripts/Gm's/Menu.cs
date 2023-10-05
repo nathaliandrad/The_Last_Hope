@@ -1,38 +1,42 @@
-﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
 {
-    public int nextScene;
-    // Start is called before the first frame update
-    void Start()
+    private int nextSceneIndex = -1; // Initialize to an invalid value
+
+    private void Start()
     {
-        nextScene = SceneManager.GetActiveScene().buildIndex + 1;
+        // Calculate the next scene index based on the current scene
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        nextSceneIndex = currentSceneIndex + 1;
+
+        // If the next scene index is out of bounds, set it to a valid scene or handle as needed
+        if (nextSceneIndex >= SceneManager.sceneCountInBuildSettings)
+        {
+            nextSceneIndex = 0; // Change to the first scene or handle as needed
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (Input.GetKey(KeyCode.Alpha1))
+        // Check for numeric key presses (1, 2, 3, 4)
+        for (int i = 1; i <= 4; i++)
         {
-            SceneManager.LoadScene(nextScene);
-        }
-        if (Input.GetKey(KeyCode.Alpha2))
-        {
-            SceneManager.LoadScene(3);
-        }
-        if (Input.GetKey(KeyCode.Alpha3))
-        {
-            SceneManager.LoadScene(4);
-        }
-        if (Input.GetKey(KeyCode.Alpha4))
-        {
-            Application.Quit();
+            if (Input.GetKeyDown(KeyCode.Alpha0 + i))
+            {
+                LoadSceneByNumber(i);
+                break; // Exit the loop after loading the scene
+            }
         }
 
-
-
+        // Check for the Escape key to quit the application
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            QuitApplication();
+        }
     }
-}
+
+    private void LoadSceneByNumber(int sceneNumber)
+    {
+       
